@@ -1,0 +1,348 @@
+/* Custom Palette: Velvet Red, Deep Charcoal, Clear White */
+:root {
+    --primary-red: #b3001e;
+    --dark-red: #7a0012;
+    --charcoal: #1a1a1a;
+    --light-bg: #f9f9f9;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --border-color: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-main);
+}
+
+/* Navbar Custom Red Style */
+.navbar {
+    background-color: var(--charcoal);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.logo {
+    color: white;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* Style the 'L' specifically if you want a custom design touch later */
+.logo::first-letter {
+    color: var(--primary-red);
+}
+
+.nav-links a {
+    color: #e0e0e0;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary-red);
+}
+
+/* Premium Filter Layout */
+.hero-filter {
+    background: linear-gradient(rgba(26, 26, 26, 0.85), rgba(26, 26, 26, 0.95)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80') center/cover;
+    padding: 60px 5%;
+    text-align: center;
+    color: white;
+}
+
+.hero-filter h2 {
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.main-search-bar {
+    background: var(--card-bg);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.input-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 6px;
+    color: #555;
+}
+
+.input-group input, .input-group select {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+/* Modern Layout Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-red);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-red);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-red);
+    color: white;
+}
+
+.btn-outline:hover {
+    background: var(--primary-red);
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px;
+}
+
+/* Real Estate Main Grid */
+.container {
+    padding: 40px 5%;
+}
+
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* Clean Professional Custom Cards */
+.property-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12 rgba(0,0,0,0.08);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-wrapper {
+    position: relative;
+    height: 200px;
+    cursor: pointer;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.img-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-price {
+    font-size: 22px;
+    color: var(--primary-red);
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card-meta {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flag-btn {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.flag-btn:hover {
+    color: #dc3545;
+}
+
+/* Unified Modals Architecture */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.gallery-modal {
+    max-width: 800px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+}
+
+.image-gallery-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.image-gallery-strip img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Advanced Real-Time Message UI Overlay */
+.chat-system {
+    display: none;
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 350px; height: 450px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    z-index: 3000;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--primary-red);
+}
+
+.chat-header {
+    background: var(--charcoal);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.chat-header button {
+    background: transparent; border: none; color: white; font-size: 20px; cursor: pointer;
+}
+
+.chat-history {
+    flex: 1; padding: 15px; overflow-y: auto; background: #f4f4f4;
+}
+
+.chat-bubble {
+    padding: 10px; border-radius: 8px; margin-bottom: 10px; max-width: 80%; font-size: 14px;
+}
+
+.chat-bubble.incoming { background: #e2e2e2; align-self: flex-start; }
+.chat-bubble.outgoing { background: var(--primary-red); color: white; margin-left: auto; }
+
+.chat-input-area {
+    display: flex; padding: 10px; border-top: 1px solid var(--border-color);
+}
+
+.chat-input-area input {
+    flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;
+}
+
+.chat-input-area button {
+    background: var(--primary-red); color: white; border: none; padding: 0 15px; margin-left: 5px; border-radius: 4px; cursor: pointer;
+}
