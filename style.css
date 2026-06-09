@@ -1,6 +1,6 @@
+const SUPABASE_URL = "https://ifrrnzminkpegscovxhh.supabase.co";
+const SUPABASE_KEY = "sb_publish_yourspecificrandomcharactershere...";
 // --- 1. CONFIGURATION ---
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";
 
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let activeVideo = null;
