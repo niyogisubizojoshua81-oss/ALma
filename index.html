@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALma | Premium Streaming</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { background-color: #0d0d11; color: #f3f4f6; font-family: system-ui, sans-serif; }
-        .premium-glow:hover { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -46,7 +45,7 @@
             <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 id="player-title" class="text-2xl font-bold text-white">Video Title</h2>
-                    <p id="player-views" class="text-sm text-gray-400 mt-1">0 views</p>
+                    <p id="player-views" class="text-sm text-gray-400 mt-1">0 viewers watched</p>
                 </div>
                 <button id="share-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg flex items-center gap-2 transition active:scale-95">
                     Share Link
@@ -61,11 +60,11 @@
                 <form id="login-form" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Email Address</label>
-                        <input type="email" id="auth-email" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none">
+                        <input type="email" id="auth-email" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Password</label>
-                        <input type="password" id="auth-password" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none">
+                        <input type="password" id="auth-password" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none text-white">
                     </div>
                     <button type="submit" class="w-full bg-red-600 hover:bg-red-700 font-bold py-2.5 rounded transition">Access Console</button>
                 </form>
@@ -79,15 +78,15 @@
                 <form id="upload-form" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Video Title</label>
-                        <input type="text" id="up-title" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none">
+                        <input type="text" id="up-title" required class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Thumbnail Image URL</label>
-                        <input type="url" id="up-thumb" required placeholder="https://..." class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none">
+                        <input type="url" id="up-thumb" required placeholder="https://..." class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Third-Party Embedded Video Link / URL</label>
-                        <input type="url" id="up-embed" required placeholder="https://..." class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none">
+                        <input type="url" id="up-embed" required placeholder="https://..." class="w-full bg-black border border-gray-700 rounded p-2.5 text-sm focus:border-red-500 outline-none text-white">
                     </div>
                     <button type="submit" class="w-full bg-green-600 hover:bg-green-700 font-bold py-2.5 rounded transition">Publish & Sync Live</button>
                 </form>
@@ -99,161 +98,6 @@
         &copy; 2026 ALma. All rights reserved. Built for raw performance.
     </footer>
 
-    <script>
-        // --- 1. CONFIGURATION ---
-        // Replace these parameters with your exact project details from Supabase -> Project Settings -> API
-        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
-        const SUPABASE_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let activeVideo = null;
-
-        // --- 2. ROUTING CONTROLLER ---
-        function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Unload iframe when leaving player view to cut off bandwidth/background processes
-            if(pageId !== 'player') {
-                document.getElementById('main-player').src = "";
-            }
-        }
-
-        // --- 3. FETCH & DISPLAY HOMEPAGE CONTENT ---
-        async function loadContentGrid() {
-            const gridContainer = document.getElementById('video-grid');
-            
-            const { data: videos, error } = await supabase
-                .from('videos')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error || !videos || videos.length === 0) {
-                gridContainer.innerHTML = `<div class="text-gray-500 text-center col-span-full py-12">No media content found in database.</div>`;
-                return;
-            }
-
-            gridContainer.innerHTML = "";
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = "bg-gray-900/50 rounded-lg overflow-hidden border border-gray-800 cursor-pointer premium-glow transition duration-300 flex flex-col group";
-                card.onclick = () => launchPlayerView(video);
-                
-                card.innerHTML = `
-                    <div class="relative aspect-video w-full bg-black overflow-hidden">
-                        <img src="${video.thumbnail_url}" alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-3.5 flex-grow flex flex-col justify-between">
-                        <h3 class="font-semibold text-sm line-clamp-2 text-gray-200 group-hover:text-red-400 transition mb-2">${video.title}</h3>
-                        <p class="text-xs text-gray-400 font-medium">${Number(video.view_count || 0).toLocaleString()} viewers watched</p>
-                    </div>
-                `;
-                gridContainer.appendChild(card);
-            });
-        }
-
-        // --- 4. SECURE PLAYER WITH HTML5 SANDBOX SHIELD ---
-        async function launchPlayerView(video) {
-            activeVideo = video;
-            showPage('player');
-            
-            // Set fields instantly
-            document.getElementById('player-title').innerText = video.title;
-            document.getElementById('player-views').innerText = `${Number(video.view_count + 1).toLocaleString()} viewers watched`;
-            
-            // Establish target embed inside the sandboxed container
-            document.getElementById('main-player').src = video.embed_url;
-
-            // Fire and forget: Atomic background increment execution inside database 
-            await supabase.rpc('increment_view', { video_id: video.id });
-        }
-
-        // --- 5. SOCIAL SHARING GENERATOR ---
-        document.getElementById('share-btn').onclick = () => {
-            if(!activeVideo) return;
-            
-            // Construct copy text string structured cleanly for direct messaging channels
-            const baseAppUrl = window.location.origin + window.location.pathname;
-            const textToCopy = `🔥 Watch "${activeVideo.title}" on ALma:\n${baseAppUrl}?v=${activeVideo.id}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const originalText = document.getElementById('share-btn').innerText;
-                document.getElementById('share-btn').innerText = "Copied to Clipboard!";
-                document.getElementById('share-btn').classList.replace('bg-red-600', 'bg-green-600');
-                
-                setTimeout(() => {
-                    document.getElementById('share-btn').innerText = originalText;
-                    document.getElementById('share-btn').classList.replace('bg-green-600', 'bg-red-600');
-                }, 2000);
-            });
-        };
-
-        // --- 6. AUTHENTICATION & MANAGEMENT PANEL ---
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                document.getElementById('admin-auth').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-            } else {
-                document.getElementById('admin-auth').classList.remove('hidden');
-                document.getElementById('admin-panel').classList.add('hidden');
-            }
-        }
-
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert(`Authentication Denied: ${error.message}`);
-            } else {
-                checkSession();
-            }
-        };
-
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            checkSession();
-        }
-
-        // --- 7. DATA PUBLISHING INTERFACE ---
-        document.getElementById('upload-form').onsubmit = async (e) => {
-            e.preventDefault();
-            
-            const title = document.getElementById('up-title').value;
-            const thumbnail_url = document.getElementById('up-thumb').value;
-            const embed_url = document.getElementById('up-embed').value;
-
-            const { error } = await supabase.from('videos').insert([{ title, thumbnail_url, embed_url, view_count: 0 }]);
-
-            if (error) {
-                alert(`Publish Error: ${error.message}`);
-            } else {
-                alert('Content pushed instantly to live database catalog!');
-                document.getElementById('upload-form').reset();
-                loadContentGrid();
-                showPage('home');
-            }
-        };
-
-        // --- 8. INITIALIZE ROUTING RESOLVER ---
-        window.onload = async () => {
-            await loadContentGrid();
-            checkSession();
-
-            // Native Deep linking handler logic for custom shared URLs
-            const urlParams = new URLSearchParams(window.location.search);
-            const videoParamId = urlParams.get('v');
-            if (videoParamId) {
-                const { data, error } = await supabase.from('videos').select('*').eq('id', videoParamId).single();
-                if (data && !error) {
-                    launchPlayerView(data);
-                }
-            }
-        };
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
